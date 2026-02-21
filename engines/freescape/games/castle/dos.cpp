@@ -367,8 +367,16 @@ void CastleEngine::loadAssetsDOSDemo() {
 			_riddleBackgroundFrame = loadFrameWithHeaderDOS(stream);
 			_riddleBottomFrame = loadFrameWithHeaderDOS(stream);
 			_endGameThroneFrame = loadFrameWithHeaderDOS(stream);
+			stream->seek(0x2716a);
 			// No header
-			Graphics::ManagedSurface *thunderFrame = loadFrameFromPlanes(stream, 32, 128);
+			Graphics::ManagedSurface *thunderFrame;
+
+			thunderFrame = loadFrameFromPlanes(stream, 16, 112);
+			thunderFrame->convertToInPlace(_gfx->_texturePixelFormat, (byte *)&kEGADefaultPalette, 16);
+			_thunderFrames.push_back(thunderFrame);
+
+			stream->seek(0x2770a);
+			thunderFrame = loadFrameFromPlanes(stream, 16, 112);
 			thunderFrame->convertToInPlace(_gfx->_texturePixelFormat, (byte *)&kEGADefaultPalette, 16);
 			_thunderFrames.push_back(thunderFrame);
 

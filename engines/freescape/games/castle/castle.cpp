@@ -106,6 +106,7 @@ CastleEngine::CastleEngine(OSystem *syst, const ADGameDescription *gd) : Freesca
 	_spiritsMeterMax = 64;
 	_thunderTicks = 0;
 	_thunderFrameDuration = 0;
+	_thunderFrameIndex = 0;
 }
 
 CastleEngine::~CastleEngine() {
@@ -1848,7 +1849,8 @@ void CastleEngine::updateThunder() {
 		//debug("Thunder frame duration: %d", _thunderFrameDuration);
 		//debug("Size: %f", 2 * _thunderOffset.length());
 		//debug("Offset: %.1f, %.1f, %.1f", _thunderOffset.x(), _thunderOffset.y(), _thunderOffset.z());
-		_gfx->drawThunder(_thunderTextures[0], _position + _thunderOffset, 100);
+		_gfx->drawThunder(_thunderTextures[_thunderFrameIndex], _position + _thunderOffset, 100);
+
 		_thunderFrameDuration--;
 		if (_thunderFrameDuration == 0)
 			if (isSpectrum() || isCPC())
@@ -1860,6 +1862,8 @@ void CastleEngine::updateThunder() {
 		//debug("Thunder ticks: %d", _thunderTicks);
 		_thunderTicks--;
 		if (_thunderTicks <= 0) {
+			if (isDOS())
+				_thunderFrameIndex = int(_rnd->getRandomNumber(_thunderTextures.size() - 1));
 			_thunderFrameDuration = 10;
 		}
 	} else {
